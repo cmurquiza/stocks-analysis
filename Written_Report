@@ -1,0 +1,137 @@
+# VBA Challenge, Stocks analysis
+
+## Overview of Project: Analysis of Stocks for 2017 and 2018
+
+### Purpose: This data was to compare DAQO stocks and it's outcomes in 2018, to other stocks in the market in 2017 and 2018 so Steve's parents could make the best decision as to where to invest their money.
+
+### Analysis of outcomes: The outcomes of the "All Stocks Analysis" for the stocks in 2018 show that the majority of the stocks decreased in stock value, especially if you compare it to the values in the analysis in 2017. In 2017, every stock besides the TERP stock had a positive growth return, with DQ, FSLR, ENPH, and SEDG having a positive return higher than 100%. Compared to the returns in 2018, every stock had a negative return, besides ENPH with a 81.9% positive return, and RUN with a 84% positive growth. Not only did it have a positive growth, but the total daily volume grew massively where ENPH in 2017 had 221,772,100 million in total daily volume, and in 2018 had 607,473,500 million. That is a 273% increase. RUN in 2017 had a total daily volume of 267,681,300 million, and in 2018 had 507,757,100 million. That is a 52.7% increase in total daily volume. This analysis was conducted using tickers assigned to each stock, and using a for loop in VBA to calculate the daily volume and return more efficiently on data collected for each stock in 2017 and 2018. Attached below is the code used to conduct this analysis for 2018: 
+
+Sub AllStockAnalysis()
+
+Dim startTime As Single
+                Dim endTime As Single
+                
+                yearValue = InputBox("What year would you like to run the analysis on?")
+                
+                    startTime = Timer
+
+
+     Worksheets("All Stocks Analysis").Activate
+
+    '1) Format the output sheet on the "All Stocks Analysis" worksheet
+            
+            Range("A1").Value = "All Stocks (2018)"
+                
+                    'Create a header row
+                    Cells(3, 1).Value = "Ticker"
+                    Cells(3, 2).Value = "Total Daily Volume"
+                    Cells(3, 3).Value = "Return"
+            
+     '2) Initialize an array of all tickers
+    
+    Dim tickers(11) As String
+
+    tickers(0) = "AY"
+    tickers(1) = "CSIQ"
+    tickers(2) = "DQ"
+    tickers(3) = "ENPH"
+    tickers(4) = "FSLR"
+    tickers(5) = "HASI"
+    tickers(6) = "JKS"
+    tickers(7) = "RUN"
+    tickers(8) = "SEDG"
+    tickers(9) = "SPWR"
+    tickers(10) = "TERP"
+    tickers(11) = "VSLR"
+    
+    
+    '3a) Initialize variables for the starting price and ending price
+    
+        Dim startingPrice As Single
+        Dim endingPrice As Single
+    
+    
+    '3b) Activate the data worksheet
+    
+        Worksheets("2018").Activate
+    
+    '3c) Find the number of rows to loops over
+    
+            RowCount = Cells(Rows.Count, "A").End(xlUp).Row
+    
+    
+        '4) Loop through the tickers
+    
+                For i = 0 To 11
+        
+                ticker = tickers(i)
+             
+                totalVolume = 0
+        
+                            '5) loop through rows in the data
+       
+                                        Worksheets("2018").Activate
+       
+                                        For j = 2 To RowCount
+           
+           
+                                         '5a) Get total volume for current ticker
+           
+                                                    If Cells(j, 1).Value = ticker Then
+
+                                                    totalVolume = totalVolume + Cells(j, 8).Value
+
+           
+           
+                                            End If
+           
+                                        '5b) get starting price for current ticker
+           
+                                                    If Cells(j - 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
+
+                                                    startingPrice = Cells(j, 6).Value
+
+                                            End If
+
+                                        '5c) get ending price for current ticker
+           
+                                                    If Cells(j + 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
+
+                                                    endingPrice = Cells(j, 6).Value
+
+                                            End If
+            
+                                    Next j
+       
+                            '6) Output data for current ticker
+       
+                                    Worksheets("All Stocks Analysis").Activate
+                
+                                    Cells(4 + i, 1).Value = ticker
+       
+                                    Cells(4 + i, 2).Value = totalVolume
+       
+                                    Cells(4 + i, 3).Value = endingPrice / startingPrice - 1
+
+   
+                        Next i
+                        
+                endTime = Timer
+                MsgBox "This code ran in " & (endTime - startTime) & " seconds for the year " & (yearValue)
+                        
+            
+
+End Sub
+
+###Png photos of the outputs will be located in the resource folder
+
+
+### Based on the analysis, investments from Steve’s parents could benefit more from investing in ENPH and RUN stocks and diversifying their investment by investing in more than one stock as suggested by Steve.
+
+## Advantages and disadvantages of refactoring code: 
+
+### Advantages of refactoring code: Refactoring code is beneficial to do when you have massive amounts of data, and want to be able to not just code through all of that information, but also to do so quickly and more efficiently. Running faster data can allow less time computing these outputs, and having them to conduct more analysis once all of your outputs are complete. Disadvantages to refactoring codes is it happens after you have a code already made. It isn’t the first code that comes out that is used, it is a code that had a skeleton already and reworked and manipulated to take out what isn’t necessary and apply what can run the code faster. 
+
+### Advantages and Disadvantages of the original and refactored VBA script: The advantages of the original code was that it was a simple for loop and got to the point, and was able to get the output the same as the refactored code. It didn’t change the actual output the physical numbers, which is the most important to the analysis. The advantage to the refactored code was that it did run faster, about 9x faster! It may not seem as much since it was still less than a second, but that is still incredible and significant. The disadvantage for the original code was that it did take longer to compute the output, but it wasn’t anything that we could effectively feel since it was still less than a second. The refactored code didn’t add anything to the actual analysis portion besides creating it to be more efficient and quick, which could be considered a negative if you wanted a code to have more of another analysis portion to it. Png photos of the results of both code times are in the resource folder. 
+
+
